@@ -236,10 +236,10 @@ _set_conf_dhcp_staticleases() {
 	conf="$1"
 
 	sconf="$(echo "$conf" | jq -r '[ .[] | {
-		"hostname": "\(.hostname)",
-		"mac":  "\(.mac)",
-		"ip":   "\(.ip)",
-		"id":   "\(.id)"
+		"name":     "\(.hostname)",
+		"mac":      "\(.mac)",
+		"ip":       "\(.ip)",
+		"id":       "\(.id)"
 	}] | del(.[][] | select(. == "null"))')"
 
 	echo "setting conf to $sconf"
