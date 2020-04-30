@@ -64,6 +64,9 @@ _set_conf_single_static() {
 	local uci_path="$2"
 	local conf_type="$3"
 
+	# Remove empty values
+	conf="$(echo $conf | jq 'del(.[] | select(. == "null"))')"
+
 	# Check hash
 	if ! _check_hash "$uci_path" "$ret"; then
 		return 1
@@ -293,6 +296,7 @@ _set_conf_network_routes6() {
 _set_conf_network_routes4() {
 	local conf="$1"
 
+	# TODO: Find a way to not use interface when setting route
 	echo "$conf" | jq -r -c ".[]" | while read -r sconf; do
 		name="$(echo "$sconf" | jq -r ".name")"
 		sconf="$(echo "$sconf" | jq -r '{
@@ -308,7 +312,7 @@ _set_conf_network_routes4() {
 			"type":      "\(.type)",
 		}')"
 
-		_set_conf_single_static	"$sconf" "network.$name" "route4"
+		_set_conf_single_static	"$sconf" "network.$name" "route"
 	done
 
 	if [ -n "$(uci changes)" ]; then
