@@ -23,6 +23,8 @@ _run() {
 		otb_reload
 	fi
 
+	otb-autoconfigure
+
 	# Handle todos
 	for file in "$OTB_TODO_DIR"/*; do
 		[ -f "$file" ] && (. "$file") && rm -f "$file"
